@@ -14,9 +14,7 @@ COPY go.mod go.sum ./
 ENV GO111MODULE=on \
     GOPROXY=https://proxy.golang.org
 RUN go mod download && go mod verify
-RUN go install github.com/go-bindata/go-bindata/...
 COPY --from=node-builder /frontend/dist ./frontend/dist
-RUN go-bindata -o static.go -pkg main ./frontend/dist/...
 COPY main.go .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install -v -trimpath . && \
     strip --strip-unneeded /go/bin/go-react
