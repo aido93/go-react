@@ -3,12 +3,12 @@ package main
 import (
     "log"
     "net/http"
+    "github.com/gobuffalo/packr/v2"
 )
 
 func main() {
-    // Serve static files from the "public" directory
-    fs := http.FileServer(http.Dir("frontend/dist"))
-    http.Handle("/", fs)
+    box := packr.New("static", "./frontend/dist")
+    http.Handle("/", http.FileServer(box))
 
     // Start the server
     log.Println("Server started on :3000")

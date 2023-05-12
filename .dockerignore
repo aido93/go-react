@@ -3,3 +3,4 @@ frontend/dist/
 docker-compose.yml
 .gitignore
 .git/
+static.go
