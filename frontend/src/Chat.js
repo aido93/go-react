@@ -14,9 +14,13 @@ function Chat() {
       console.log('WebSocket error: ', error);
     };
     ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      setMessages((prevMessages) => [...prevMessages, message]);
-      console.log(messages)
+      try {
+        const message = JSON.parse(event.data);
+        setMessages((prevMessages) => [...prevMessages, message]);
+        console.log(messages)
+      } catch (e) {
+        console.log(e)
+      }
     };
     ws.onclose = () => {
       console.log('Disconnected from server');

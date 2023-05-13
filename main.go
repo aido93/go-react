@@ -8,15 +8,29 @@ import (
 	"io/fs"
 	"net"
 	"net/http"
+    "strings"
 )
 
 //go:embed frontend/dist/*
 var frontendFiles embed.FS
 
+func contains(list []string, str string) bool {
+    for _, item := range list {
+        components := strings.Split(item, ",")
+        for _, component := range components {
+            component = strings.Trim(component, " ")
+            if component == str {
+                return true
+            }
+        }
+    }
+    return false
+}
+
 func wsHandler(w http.ResponseWriter, r *http.Request) {
 	var conn net.Conn
 	var err error
-	if r.Header["Connection"][0] == "Upgrade" {
+	if contains(r.Header["Connection"], "Upgrade") {
 		conn, _, _, err = ws.UpgradeHTTP(r, w)
 		if err != nil {
 			// handle error
