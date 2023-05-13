@@ -1,10 +1,11 @@
-FROM node:19.5.0 AS node-builder
+FROM node:18-alpine AS node-builder
 
 WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm install
 # If you are building your code for production
-# RUN npm ci --omit=dev
+RUN npm ci --omit=dev
+RUN npm install -D webpack-cli
 COPY frontend/ .
 RUN npx webpack --config webpack.config.js --mode production
 
