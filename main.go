@@ -31,6 +31,10 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 		for {
 			msg, op, err := wsutil.ReadClientData(conn)
+            if op == ws.OpClose {
+				log.Debug("Closed")
+				break
+            }
 			if err != nil {
 				// handle error
 				log.Error("Read: ", err)
