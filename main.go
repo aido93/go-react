@@ -18,7 +18,7 @@ func contains(list []string, str string) bool {
     for _, item := range list {
         components := strings.Split(item, ",")
         for _, component := range components {
-            component = strings.Trim(component, " ")
+            component = strings.TrimSpace(component)
             if component == str {
                 return true
             }
@@ -51,7 +51,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
             }
 			if err != nil {
 				// handle error
-				log.Error("Read: ", err)
+				log.Error("Read: ", err, op)
 				break
 			}
 			log.Info("Message: ", string(msg))

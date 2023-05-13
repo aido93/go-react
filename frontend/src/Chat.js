@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './Chat.css';
 
+const ws = new WebSocket('ws://localhost:3000/socket.io');
+
 function Chat() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
-  const ws = new WebSocket('ws://localhost:3000/socket.io');
 
   useEffect(() => {
     ws.onopen = () => {
@@ -14,13 +15,8 @@ function Chat() {
       console.log('WebSocket error: ', error);
     };
     ws.onmessage = (event) => {
-      try {
         const message = JSON.parse(event.data);
         setMessages((prevMessages) => [...prevMessages, message]);
-        console.log(messages)
-      } catch (e) {
-        console.log(e)
-      }
     };
     ws.onclose = () => {
       console.log('Disconnected from server');
