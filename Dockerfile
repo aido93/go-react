@@ -15,12 +15,13 @@ COPY go.mod go.sum ./
 ENV GO111MODULE=on \
     GOPROXY=https://proxy.golang.org
 RUN go mod download && go mod verify
-COPY --from=node-builder /frontend/dist ./frontend/dist
 COPY main.go .
+COPY --from=node-builder /frontend/dist ./frontend/dist
+COPY cmd ./cmd
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install -v -trimpath . && \
     strip --strip-unneeded /go/bin/go-react
 
 FROM scratch
 COPY --from=builder /go/bin/go-react /go-react
 EXPOSE 3000
-ENTRYPOINT ["/go-react"]
+ENTRYPOINT ["/go-react", "server"]

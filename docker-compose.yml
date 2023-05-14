@@ -6,3 +6,8 @@ services:
     build: .
     ports:
     - 3000:3000
+    environment:
+      GOREACT_HOST: 0.0.0.0
+      GOREACT_PORT: 3000
+      GOREACT_WS_HOST: localhost
+      GOREACT_WS_PATH: /chat

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Chat.css';
 
-const ws = new WebSocket('ws://localhost:3000/socket.io');
+const ws = new WebSocket('ws://localhost:3000/chat');
 
 function Chat() {
   const [messages, setMessages] = useState([]);
