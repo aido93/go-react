@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 function App() {
   // send a GET request to the server when the page loads
   const [ws, setWS] = useState(null);
+  const [wsAddress, setWSAddress] = useState("");
   useEffect(() => {
     fetch(window.location.origin + "/params")
       .then(response => response.json())
@@ -15,16 +16,8 @@ function App() {
         const wsPort = data['wsPort'];
         const wsPath = data['wsPath'];
         const wsAddress = `${wsProtocol}://${wsHost}:${wsPort}${wsPath}`;
+        setWSAddress(wsAddress);
         const ws = new WebSocket(wsAddress);
-        ws.onopen = () => {
-          console.log('Connected to server');
-        };
-        ws.onerror = (error) => {
-          console.log('WebSocket error: ', error);
-        };
-        ws.onclose = () => {
-          console.log('Disconnected from server');
-        };
         setWS(ws);
         // render the Chat component with the ws prop
       })
@@ -35,7 +28,7 @@ function App() {
     }, []);
     return (
           <div className="App">
-              <Chat ws={ws} />
+              <Chat ws={ws} wsAddress={wsAddress} />
           </div>
         );
 }
