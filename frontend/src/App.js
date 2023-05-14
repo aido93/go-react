@@ -23,6 +23,9 @@ function App() {
         console.error(error);
       })
     }, []);
+    if (wsAddress == '') {
+        return null
+    }
     return (
           <div className="App">
               <Chat wsAddress={wsAddress} />
