@@ -47,8 +47,18 @@ function Chat(props) {
     if (text.trim() === '') return;
     const message = { text };
     checkWSClosed();
-    ws.send(JSON.stringify(message));
-    setText('');
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(message));
+      setText('');
+    } else {
+      const interval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+          clearInterval(interval);
+          ws.send(JSON.stringify(message));
+          setText('');
+        }
+      }, 1000);
+    }
   };
 
   return (
