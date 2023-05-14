@@ -33,6 +33,7 @@ function App() {
         // handle any errors that occur
         console.error(error);
       });
+    return null;
 }
 
 export default App;
