@@ -1,9 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import Chat from './Chat';
+import { useState, useEffect } from 'react';
 
 function App() {
   // send a GET request to the server when the page loads
+  const [ws, setWS] = useState(null);
+  useEffect(() => {
     fetch(window.location.origin + "/params")
       .then(response => response.json())
       .then(data => {
@@ -22,18 +25,19 @@ function App() {
         ws.onclose = () => {
           console.log('Disconnected from server');
         };
+        setWS(ws);
         // render the Chat component with the ws prop
-        return (
-          <div className="App">
-              <Chat ws={ws} />
-          </div>
-        );
       })
       .catch(error => {
         // handle any errors that occur
         console.error(error);
-      });
-    return null;
+      })
+    }, []);
+    return (
+          <div className="App">
+              <Chat ws={ws} />
+          </div>
+        );
 }
 
 export default App;
