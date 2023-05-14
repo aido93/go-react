@@ -4,7 +4,6 @@ import Chat from './Chat';
 
 function App() {
   // send a GET request to the server when the page loads
-  window.addEventListener("load", () => {
     fetch(window.location.origin + "/params")
       .then(response => response.json())
       .then(data => {
@@ -34,12 +33,6 @@ function App() {
         // handle any errors that occur
         console.error(error);
       });
-  });
-  return (
-  <div className="App">
-      <Chat />
-  </div>
-  )
 }
 
 export default App;
