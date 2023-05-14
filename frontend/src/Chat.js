@@ -3,19 +3,15 @@ import { createRoot } from 'react-dom';
 import './Chat.css';
 
 function Chat(props) {
-  var { ws, wsAddress } = props;
-  var wsClosed = false;
+  const { wsAddress } = props;
+  const [ws, setWs] = useState(new WebSocket(wsAddress));
+  const [wsClosed, setWsClosed] = useState(false);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
 
   useEffect(() => {
     if (!ws) return;
-    checkWSClosed(wsClosed);
-    ws.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        setMessages((prevMessages) => [...prevMessages, message]);
-    };
-
+    checkWSClosed();
     return () => {
       ws.close();
     };
@@ -24,34 +20,33 @@ function Chat(props) {
   function handleInputChange(event) {
     setText(event.target.value);
   }
-  function checkWSClosed (wsClosed) {
+  function checkWSClosed () {
     if (wsClosed) {
-      ws = new WebSocket(wsAddress);
+        setWs(new WebSocket(wsAddress));
+        setWsClosed(false);
     }
-    if (!ws.onopen) {
-      ws.onopen = () => {
+    ws.onopen = () => {
         console.log('Connected to server');
-        wsClosed = false;
-      };
-    }
-    if (!ws.onerror) {
-      ws.onerror = (error) => {
+        setWsClosed(false);
+    };
+    ws.onerror = (error) => {
         console.log('WebSocket error: ', error);
-        wsClosed = true;
-      };
-    }
-    if (!ws.onclose) {
-      ws.onclose = () => {
+        setWsClosed(true);
+    };
+    ws.onclose = () => {
         console.log('Disconnected from server');
-        wsClosed = true;
-      };
-    }
+        setWsClosed(true);
+    };
+    ws.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        setMessages((prevMessages) => [...prevMessages, message]);
+    };
   }
   const handleSubmit = (event) => {
     event.preventDefault();
     if (text.trim() === '') return;
     const message = { text };
-    checkWSClosed(wsClosed);
+    checkWSClosed();
     ws.send(JSON.stringify(message));
     setText('');
   };
