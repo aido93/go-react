@@ -4,7 +4,6 @@ import './Chat.css';
 function Chat(props) {
   const { wsAddress } = props;
   const [ws, setWs] = useState(null);
-  const [wsClosed, setWsClosed] = useState(true);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
 
@@ -23,15 +22,12 @@ function Chat(props) {
     const newWs = new WebSocket(wsAddress);
     newWs.onopen = () => {
           console.log('Connected to server');
-          setWsClosed(false);
     };
     newWs.onerror = (error) => {
           console.log('WebSocket error: ', error);
-          setWsClosed(true);
     };
     newWs.onclose = () => {
           console.log('Disconnected from server');
-          setWsClosed(true);
     };
     newWs.onmessage = (event) => {
           const message = JSON.parse(event.data);
@@ -49,7 +45,7 @@ function Chat(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (wsClosed || ws.readyState != WebSocket.OPEN) {
+    if (ws.readyState != WebSocket.OPEN) {
       let newWs = await connectToWebSocket();
       setWs(newWs);
     }
