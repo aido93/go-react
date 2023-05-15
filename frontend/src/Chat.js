@@ -49,7 +49,7 @@ function Chat(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (wsClosed || ws.readyState !== WebSocket.OPEN) {
+    if (wsClosed || ws.readyState != WebSocket.OPEN) {
       let newWs = await connectToWebSocket();
       setWs(newWs);
     }
