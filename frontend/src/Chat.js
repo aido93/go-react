@@ -10,7 +10,8 @@ function Chat(props) {
 
   useEffect(() => {
     if (!ws) {
-      connectToWebSocket();
+      let newWs = connectToWebSocket();
+      setWs(newWs);
     }
   }, [ws]);
 
@@ -22,7 +23,6 @@ function Chat(props) {
     const newWs = new WebSocket(wsAddress);
     newWs.onopen = () => {
           console.log('Connected to server');
-          setWs(newWs);
           setWsClosed(false);
     };
     newWs.onerror = (error) => {
@@ -37,6 +37,7 @@ function Chat(props) {
           const message = JSON.parse(event.data);
           setMessages((prevMessages) => [...prevMessages, message]);
     };
+    return newWs;
   }
 
   function sendWebSocketMessage() {
@@ -49,7 +50,8 @@ function Chat(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (wsClosed || ws.readyState !== WebSocket.OPEN) {
-      await connectToWebSocket();
+      let newWs = await connectToWebSocket();
+      setWs(newWs);
     }
     sendWebSocketMessage();
   };
